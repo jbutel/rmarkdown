@@ -1,0 +1,22 @@
+---
+title: Processing Affymetrix Microarrays
+output: 
+    html_document:
+        code_folding: show
+params:
+    test_value: 10
+---
+
+## Results
+
+### Import Raw Data
+```{r}
+raw_data <- affyio::read.celfile('C:/Users/linde/rmarkdown/input_data/GLDS-6_array_Rnor_SDR_keratinocytes_CTRL_Rep1_GSM144733_raw.CEL.gz',intensity.means.only=FALSE)
+```
+
+```{r}
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+
+# BiocManager::install("affyio")
+```
