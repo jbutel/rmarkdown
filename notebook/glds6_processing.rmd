@@ -7,16 +7,36 @@ params:
     test_value: 10
 ---
 
-## Results
+### Import Packages
+```{r}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
 
+BiocManager::install("affyio")
+#package for reading CEL files, will add more packages for further steps
+```
 ### Import Raw Data
 ```{r}
 raw_data <- affyio::read.celfile('C:/Users/linde/rmarkdown/input_data/GLDS-6_array_Rnor_SDR_keratinocytes_CTRL_Rep1_GSM144733_raw.CEL.gz',intensity.means.only=FALSE)
 ```
 
+### Verify Data
 ```{r}
-# if (!require("BiocManager", quietly = TRUE))
-#     install.packages("BiocManager")
-
-# BiocManager::install("affyio")
+print("Verify Data step")
+```
+### Normalize Data
+```{r}
+print("Normalize Data step")
+```
+### Verify Normalization
+```{r}
+print("Verify Normalization step")
+```
+### DGE Analysis
+```{r}
+print("DGE Analysis step")
+```
+### Gene Annotations
+```{r}
+print("Gene Annotations step")
 ```
