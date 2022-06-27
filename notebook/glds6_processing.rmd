@@ -17,6 +17,10 @@ BiocManager::install("affyio")
 ```
 ### Import Raw Data
 ```{r}
+#access folder
+#make a list?
+#go through the items 
+#map?
 raw_data <- affyio::read.celfile('C:/Users/linde/rmarkdown/input_data/GLDS-6_array_Rnor_SDR_keratinocytes_CTRL_Rep1_GSM144733_raw.CEL.gz',intensity.means.only=FALSE)
 ```
 
