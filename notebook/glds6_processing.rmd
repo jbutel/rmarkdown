@@ -9,19 +9,27 @@ params:
 
 ### Import Packages
 ```{r}
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
 
-BiocManager::install("affyio")
+# BiocManager::install("oligo")
 #package for reading CEL files, will add more packages for further steps
 ```
 ### Import Raw Data
 ```{r}
+csv_file <- read.table(file = r"(C:\Users\linde\OneDrive\Desktop\affy_processing\data_runsheets\GLDS_25_runsheet.csv)", 
+                       sep=",",
+                       header = TRUE,
+                       check.names = FALSE
+                       )
+array_data_files <- csv_file["Characteristics:  array data file"]
 #access folder
 #make a list?
 #go through the items 
 #map?
-raw_data <- affyio::read.celfile('C:/Users/linde/rmarkdown/input_data/GLDS-6_array_Rnor_SDR_keratinocytes_CTRL_Rep1_GSM144733_raw.CEL.gz',intensity.means.only=FALSE)
+#raw_data = list(map(lambda x: affyio::read.celfile(x, intensity.means.only=FALSE), unread_data))
+#raw_data <- affyio::read.celfile(array_data_files,intensity.means.only=FALSE)
+raw_data <- oligo::read.celfiles(filenames = r"(C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep1_Sample52_raw.CEL.gz)")
 ```
 
 ### Verify Data

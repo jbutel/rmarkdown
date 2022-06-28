@@ -454,16 +454,106 @@ pre code {
 </div>
 
 
-<div id="results" class="section level2">
-<h2>Results</h2>
-<div id="import-raw-data" class="section level3">
-<h3>Import Raw Data</h3>
-<pre class="r"><code>raw_data &lt;- affyio::read.celfile(&#39;C:/Users/linde/rmarkdown/input_data/GLDS-6_array_Rnor_SDR_keratinocytes_CTRL_Rep1_GSM144733_raw.CEL.gz&#39;,intensity.means.only=FALSE)</code></pre>
+<div id="import-packages" class="section level3">
+<h3>Import Packages</h3>
 <pre class="r"><code># if (!require(&quot;BiocManager&quot;, quietly = TRUE))
 #     install.packages(&quot;BiocManager&quot;)
 
-# BiocManager::install(&quot;affyio&quot;)</code></pre>
+# BiocManager::install(&quot;oligo&quot;)
+#package for reading CEL files, will add more packages for further steps</code></pre>
 </div>
+<div id="import-raw-data" class="section level3">
+<h3>Import Raw Data</h3>
+<pre class="r"><code>csv_file &lt;- read.table(file = r&quot;(C:\Users\linde\OneDrive\Desktop\affy_processing\data_runsheets\GLDS_25_runsheet.csv)&quot;, 
+                       sep=&quot;,&quot;,
+                       header = TRUE,
+                       check.names = FALSE
+                       )
+array_data_files &lt;- csv_file[&quot;Characteristics:  array data file&quot;]
+#access folder
+#make a list?
+#go through the items 
+#map?
+#raw_data = list(map(lambda x: affyio::read.celfile(x, intensity.means.only=FALSE), unread_data))
+#raw_data &lt;- affyio::read.celfile(array_data_files,intensity.means.only=FALSE)
+raw_data &lt;- oligo::read.celfiles(filenames = r&quot;(C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep1_Sample52_raw.CEL.gz)&quot;)</code></pre>
+<pre><code>## Loading required package: pd.mogene.1.0.st.v1</code></pre>
+<pre><code>## Loading required package: Biostrings</code></pre>
+<pre><code>## Loading required package: BiocGenerics</code></pre>
+<pre><code>## 
+## Attaching package: &#39;BiocGenerics&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     IQR, mad, sd, var, xtabs</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     anyDuplicated, append, as.data.frame, basename, cbind, colnames,
+##     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+##     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
+##     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+##     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
+##     union, unique, unsplit, which.max, which.min</code></pre>
+<pre><code>## Loading required package: S4Vectors</code></pre>
+<pre><code>## Loading required package: stats4</code></pre>
+<pre><code>## 
+## Attaching package: &#39;S4Vectors&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     expand.grid, I, unname</code></pre>
+<pre><code>## Loading required package: IRanges</code></pre>
+<pre><code>## 
+## Attaching package: &#39;IRanges&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:grDevices&#39;:
+## 
+##     windows</code></pre>
+<pre><code>## Loading required package: XVector</code></pre>
+<pre><code>## Loading required package: GenomeInfoDb</code></pre>
+<pre><code>## 
+## Attaching package: &#39;Biostrings&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:base&#39;:
+## 
+##     strsplit</code></pre>
+<pre><code>## Loading required package: RSQLite</code></pre>
+<pre><code>## Loading required package: oligoClasses</code></pre>
+<pre><code>## Welcome to oligoClasses version 1.56.0</code></pre>
+<pre><code>## Loading required package: oligo</code></pre>
+<pre><code>## Loading required package: Biobase</code></pre>
+<pre><code>## Welcome to Bioconductor
+## 
+##     Vignettes contain introductory material; view with
+##     &#39;browseVignettes()&#39;. To cite Bioconductor, see
+##     &#39;citation(&quot;Biobase&quot;)&#39;, and for packages &#39;citation(&quot;pkgname&quot;)&#39;.</code></pre>
+<pre><code>## ================================================================================</code></pre>
+<pre><code>## Welcome to oligo version 1.58.0</code></pre>
+<pre><code>## ================================================================================</code></pre>
+<pre><code>## Loading required package: DBI</code></pre>
+<pre><code>## Platform design info loaded.</code></pre>
+<pre><code>## Reading in : C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep1_Sample52_raw.CEL.gz</code></pre>
+</div>
+<div id="verify-data" class="section level3">
+<h3>Verify Data</h3>
+<pre class="r"><code>print(&quot;Verify Data step&quot;)</code></pre>
+<pre><code>## [1] &quot;Verify Data step&quot;</code></pre>
+</div>
+<div id="normalize-data" class="section level3">
+<h3>Normalize Data</h3>
+<pre class="r"><code>print(&quot;Normalize Data step&quot;)</code></pre>
+<pre><code>## [1] &quot;Normalize Data step&quot;</code></pre>
+</div>
+<div id="verify-normalization" class="section level3">
+<h3>Verify Normalization</h3>
+<pre class="r"><code>print(&quot;Verify Normalization step&quot;)</code></pre>
+<pre><code>## [1] &quot;Verify Normalization step&quot;</code></pre>
+</div>
+<div id="dge-analysis" class="section level3">
+<h3>DGE Analysis</h3>
+<pre class="r"><code>print(&quot;DGE Analysis step&quot;)</code></pre>
+<pre><code>## [1] &quot;DGE Analysis step&quot;</code></pre>
+</div>
+<div id="gene-annotations" class="section level3">
+<h3>Gene Annotations</h3>
+<pre class="r"><code>print(&quot;Gene Annotations step&quot;)</code></pre>
+<pre><code>## [1] &quot;Gene Annotations step&quot;</code></pre>
 </div>
 
 
