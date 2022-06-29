@@ -1,0 +1,49 @@
+---
+title: Processing Affymetrix Microarrays
+output: 
+    html_document:
+        code_folding: show
+params:
+    test_value: 10
+---
+
+### Import Packages
+```{r}
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+
+# BiocManager::install("oligo")
+#package for reading CEL files, will add more packages for further steps
+```
+### Import Raw Data
+```{r}
+csv_file <- read.table(file = r"(C:\Users\linde\OneDrive\Desktop\affy_processing\data_runsheets\GLDS_25_runsheet.csv)", 
+                       sep=",",
+                       header = TRUE,
+                       check.names = FALSE
+                       )
+array_data_files <- csv_file["Path to File"]
+
+raw_data <- oligo::read.celfiles(filenames = array_data_files)
+```
+
+### Verify Data
+```{r}
+print("Verify Data step")
+```
+### Normalize Data
+```{r}
+print("Normalize Data step")
+```
+### Verify Normalization
+```{r}
+print("Verify Normalization step")
+```
+### DGE Analysis
+```{r}
+print("DGE Analysis step")
+```
+### Gene Annotations
+```{r}
+print("Gene Annotations step")
+```
