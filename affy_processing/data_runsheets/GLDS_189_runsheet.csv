@@ -1,0 +1,25 @@
+Sample Name,Factor Value: Microgravity,Factor Value: Hypergravity,Array Data File,Path to File
+GSM2699159 extract 1,1g baseline,,GLDS-189_microarray_GSM2699159_20151015_AGEX_031_006_40.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699159_20151015_AGEX_031_006_40.CEL.gz
+GSM2699160 extract 1,1g baseline,,GLDS-189_microarray_GSM2699160_20151015_AGEX_031_006_41.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699160_20151015_AGEX_031_006_41.CEL.gz
+GSM2699161 extract 1,1g baseline,,GLDS-189_microarray_GSM2699161_20151015_AGEX_031_006_43.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699161_20151015_AGEX_031_006_43.CEL.gz
+GSM2699162 extract 1,1g baseline,,GLDS-189_microarray_GSM2699162_20151015_AGEX_031_006_44.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699162_20151015_AGEX_031_006_44.CEL.gz
+GSM2699163 extract 1,1g baseline,,GLDS-189_microarray_GSM2699163_20151015_AGEX_031_006_45.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699163_20151015_AGEX_031_006_45.CEL.gz
+GSM2699164 extract 1,1g baseline,,GLDS-189_microarray_GSM2699164_20151015_AGEX_031_006_46.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699164_20151015_AGEX_031_006_46.CEL.gz
+GSM2699165 extract 1,1g baseline,,GLDS-189_microarray_GSM2699165_20151015_AGEX_031_006_47.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699165_20151015_AGEX_031_006_47.CEL.gz
+GSM2699166 extract 1,1g ground control,,GLDS-189_microarray_GSM2699166_20151015_AGEX_031_006_49.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699166_20151015_AGEX_031_006_49.CEL.gz
+GSM2699167 extract 1,1g ground control,,GLDS-189_microarray_GSM2699167_20151015_AGEX_031_006_50.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699167_20151015_AGEX_031_006_50.CEL.gz
+GSM2699168 extract 1,1g ground control,,GLDS-189_microarray_GSM2699168_20151015_AGEX_031_006_51.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699168_20151015_AGEX_031_006_51.CEL.gz
+GSM2699169 extract 1,1g ground control,,GLDS-189_microarray_GSM2699169_20151015_AGEX_031_006_52.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699169_20151015_AGEX_031_006_52.CEL.gz
+GSM2699170 extract 1,1g ground control,,GLDS-189_microarray_GSM2699170_20151015_AGEX_031_006_53.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699170_20151015_AGEX_031_006_53.CEL.gz
+GSM2699171 extract 1,1g ground control,,GLDS-189_microarray_GSM2699171_20151015_AGEX_031_006_54.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699171_20151015_AGEX_031_006_54.CEL.gz
+GSM2699172 extract 1,simulated microgravity,,GLDS-189_microarray_GSM2699172_20151015_AGEX_031_006_56.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699172_20151015_AGEX_031_006_56.CEL.gz
+GSM2699173 extract 1,simulated microgravity,,GLDS-189_microarray_GSM2699173_20151015_AGEX_031_006_57.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699173_20151015_AGEX_031_006_57.CEL.gz
+GSM2699174 extract 1,simulated microgravity,,GLDS-189_microarray_GSM2699174_20151015_AGEX_031_006_59.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699174_20151015_AGEX_031_006_59.CEL.gz
+GSM2699175 extract 1,simulated microgravity,,GLDS-189_microarray_GSM2699175_20151015_AGEX_031_006_60.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699175_20151015_AGEX_031_006_60.CEL.gz
+GSM2699176 extract 1,simulated microgravity,,GLDS-189_microarray_GSM2699176_20151015_AGEX_031_006_62.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699176_20151015_AGEX_031_006_62.CEL.gz
+GSM2699177 extract 1,simulated microgravity,,GLDS-189_microarray_GSM2699177_20151015_AGEX_031_006_63.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699177_20151015_AGEX_031_006_63.CEL.gz
+GSM2699178 extract 1,,9g,GLDS-189_microarray_GSM2699178_20151015_AGEX_031_006_64.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699178_20151015_AGEX_031_006_64.CEL.gz
+GSM2699179 extract 1,,9g,GLDS-189_microarray_GSM2699179_20151015_AGEX_031_006_68.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699179_20151015_AGEX_031_006_68.CEL.gz
+GSM2699180 extract 1,,9g,GLDS-189_microarray_GSM2699180_20151015_AGEX_031_006_69.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699180_20151015_AGEX_031_006_69.CEL.gz
+GSM2699181 extract 1,,9g,GLDS-189_microarray_GSM2699181_20151015_AGEX_031_006_70.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699181_20151015_AGEX_031_006_70.CEL.gz
+GSM2699182 extract 1,,9g,GLDS-189_microarray_GSM2699182_20151015_AGEX_031_006_71.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699182_20151015_AGEX_031_006_71.CEL.gz

@@ -1,0 +1,18 @@
+Sample Name,Factor Value: Spaceflight,Characteristics:  array data file,Path to File
+Mmus_C57-6CR_LVR_GC_Rep1,Ground Control ,GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep1_Sample18_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep1_Sample18_raw.CEL.gz 
+Mmus_C57-6CR_LVR_GC_Rep2,Ground Control ,GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep2_Sample28_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep2_Sample28_raw.CEL.gz
+Mmus_C57-6CR_LVR_GC_Rep3,Ground Control ,GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep3_Sample32_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep3_Sample32_raw.CEL.gz
+Mmus_C57-6CR_LVR_GC_Rep4,Ground Control ,GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep4_Sample36_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep4_Sample36_raw.CEL.gz
+Mmus_C57-6CR_LVR_GC_Rep5,Ground Control ,GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep5_Sample44_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep5_Sample44_raw.CEL.gz
+Mmus_C57-6CR_LVR_FLT_Rep1,Space Flight ,GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep1_Sample52_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep1_Sample52_raw.CEL.gz
+Mmus_C57-6CR_LVR_FLT_Rep2,Space Flight ,GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep2_Sample58_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep2_Sample58_raw.CEL.gz
+Mmus_C57-6CR_LVR_FLT_Rep3,Space Flight ,GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep3_Sample60_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep3_Sample60_raw.CEL.gz
+Mmus_C57-6CR_LVR_FLT_Rep4,Space Flight ,GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep4_Sample64_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep4_Sample64_raw.CEL.gz
+Mmus_C57-6CR_LVR_FLT_Rep5,Space Flight ,GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep5_Sample66_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep5_Sample66_raw.CEL.gz
+Mmus_C57-6CR_LVR_FLT_Rep6,Space Flight ,GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep6_Sample74_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_FLT_Rep6_Sample74_raw.CEL.gz
+Mmus_C57-6CR_LVR_VIV_Rep1,Vivarium Control ,GLDS-25_array_Mmus_C57-6CR_LVR_VIV_Rep1_Sample1_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_VIV_Rep1_Sample1_raw.CEL.gz
+Mmus_C57-6CR_LVR_VIV_Rep2,Vivarium Control ,GLDS-25_array_Mmus_C57-6CR_LVR_VIV_Rep2_Sample3_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_VIV_Rep2_Sample3_raw.CEL.gz
+Mmus_C57-6CR_LVR_VIV_Rep3,Vivarium Control ,GLDS-25_array_Mmus_C57-6CR_LVR_VIV_Rep3_Sample4_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_VIV_Rep3_Sample4_raw.CEL.gz
+Mmus_C57-6CR_LVR_VIV_Rep4,Vivarium Control ,GLDS-25_array_Mmus_C57-6CR_LVR_VIV_Rep4_Sample5_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_VIV_Rep4_Sample5_raw.CEL.gz
+Mmus_C57-6CR_LVR_VIV_Rep5,Vivarium Control ,GLDS-25_array_Mmus_C57-6CR_LVR_VIV_Rep5_Sample6_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_VIV_Rep5_Sample6_raw.CEL.gz
+Mmus_C57-6CR_LVR_VIV_Rep6,Vivarium Control ,GLDS-25_array_Mmus_C57-6CR_LVR_VIV_Rep6_Sample7_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_VIV_Rep6_Sample7_raw.CEL.gz

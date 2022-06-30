@@ -1,0 +1,7 @@
+Sample Name,Factor Value: Ionizing Radiation,Parameter Value:  array data file,Path to File
+Rnor_SDR_keratinocytes_CTRL_Rep1,Non-irradiated ,GLDS-6_array_Rnor_SDR_keratinocytes_CTRL_Rep1_GSM144733_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS6\GLDS-6_array_Rnor_SDR_keratinocytes_CTRL_Rep1_GSM144733_raw1.CEL.gz
+Rnor_SDR_keratinocytes_CTRL_Rep2,Non-irradiated ,GLDS-6_array_Rnor_SDR_keratinocytes_CTRL_Rep2_GSM144734_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS6\GLDS-6_array_Rnor_SDR_keratinocytes_CTRL_Rep2_GSM144734_raw.CEL.gz
+Rnor_SDR_keratinocytes_CTRL_Rep3,Non-irradiated ,GLDS-6_array_Rnor_SDR_keratinocytes_CTRL_Rep3_GSM144735_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS6\GLDS-6_array_Rnor_SDR_keratinocytes_CTRL_Rep3_GSM144735_raw.CEL.gz
+Rnor_SDR_keratinocytes_IR_56Fe_Rep1,56Fe ion beam radiation ,GLDS-6_array_Rnor_SDR_keratinocytes_IR_56Fe_Rep1_GSM144736_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS6\GLDS-6_array_Rnor_SDR_keratinocytes_IR_56Fe_Rep1_GSM144736_raw.CEL.gz
+Rnor_SDR_keratinocytes_IR_56Fe_Rep2,56Fe ion beam radiation ,GLDS-6_array_Rnor_SDR_keratinocytes_IR_56Fe_Rep2_GSM144737_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS6\GLDS-6_array_Rnor_SDR_keratinocytes_IR_56Fe_Rep2_GSM144737_raw.CEL.gz
+Rnor_SDR_keratinocytes_IR_56Fe_Rep3,56Fe ion beam radiation ,GLDS-6_array_Rnor_SDR_keratinocytes_IR_56Fe_Rep3_GSM144738_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS6\GLDS-6_array_Rnor_SDR_keratinocytes_IR_56Fe_Rep3_GSM144738_raw.CEL.gz
