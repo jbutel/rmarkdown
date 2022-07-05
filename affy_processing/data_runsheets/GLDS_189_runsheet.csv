@@ -1,4 +1,4 @@
-Sample Name,Factor Value: Microgravity,Factor Value: Hypergravity,Array Data File,Path to File
+Sample Name,Factor Value: Microgravity,Factor Value: Hypergravity,Array Data File,Path to Raw Data File
 GSM2699159 extract 1,1g baseline,,GLDS-189_microarray_GSM2699159_20151015_AGEX_031_006_40.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699159_20151015_AGEX_031_006_40.CEL.gz
 GSM2699160 extract 1,1g baseline,,GLDS-189_microarray_GSM2699160_20151015_AGEX_031_006_41.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699160_20151015_AGEX_031_006_41.CEL.gz
 GSM2699161 extract 1,1g baseline,,GLDS-189_microarray_GSM2699161_20151015_AGEX_031_006_43.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS189\GLDS-189_microarray_GSM2699161_20151015_AGEX_031_006_43.CEL.gz

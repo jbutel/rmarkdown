@@ -1,4 +1,4 @@
-Sample Name,Factor Value: Spaceflight,Characteristics:  array data file,Path to File
+Sample Name,Factor Value: Spaceflight,Characteristics:  array data file,Path to Raw Data File
 Mmus_C57-6CR_LVR_GC_Rep1,Ground Control ,GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep1_Sample18_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep1_Sample18_raw.CEL.gz 
 Mmus_C57-6CR_LVR_GC_Rep2,Ground Control ,GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep2_Sample28_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep2_Sample28_raw.CEL.gz
 Mmus_C57-6CR_LVR_GC_Rep3,Ground Control ,GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep3_Sample32_raw.CEL.gz,C:\Users\linde\rmarkdown\input_data\GLDS25\GLDS-25_array_Mmus_C57-6CR_LVR_GC_Rep3_Sample32_raw.CEL.gz

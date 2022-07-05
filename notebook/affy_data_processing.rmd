@@ -17,14 +17,14 @@ params:
 ```
 ### Import Raw Data
 ```{r}
-csv_file <- read.table(file = r"(C:\Users\linde\OneDrive\Desktop\affy_processing\data_runsheets\GLDS_25_runsheet.csv)", 
+csv_file <- read.table(file = r"(C:\Users\linde\rmarkdown\affy_processing\data_runsheets\GLDS_6_runsheet.csv)", 
                        sep=",",
                        header = TRUE,
                        check.names = FALSE
                        )
-array_data_files <- csv_file["Path to File"]
+array_data_files <- csv_file["Path to Raw Data File"] #column name of paths
 
-raw_data <- oligo::read.celfiles(filenames = array_data_files)
+raw_data <- oligo::read.celfiles(array_data_files)
 ```
 
 ### Verify Data

@@ -203,7 +203,7 @@ raw_data <- oligo::read.celfiles(array_data_files)
 
 **Output Data:**
 
-- GeneExpressionSet (read raw data)
+- GeneExpressionSet (read raw)
 
 <br>
 
