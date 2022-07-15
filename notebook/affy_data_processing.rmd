@@ -9,10 +9,10 @@ params:
 
 ### Import Packages
 ```{r}
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
 
-BiocManager::install("oligo")
+# BiocManager::install("oligo")
 #package for reading CEL files, will add more packages for further steps
 ```
 ### Import Raw Data
@@ -24,7 +24,7 @@ csv_file <- read.table(file = r"(C:\Users\linde\rmarkdown\affy_processing\data_r
                        )
 array_data_files <- csv_file["Path to Raw Data File"] #column name of paths
 
-raw_data <- oligo::read.celfiles(array_data_files) #AffyBatch Class
+raw_data <- oligo::read.celfiles(array_data_files) #ExpressionFeatureSet Class
 ```
 
 ### Verify Data
@@ -35,8 +35,10 @@ print("Verify Data step")
 ### Quality Analysis 
 ### QA: Visualization
 ```{r}
-density_plot = hist(raw_data, transfo=log2, which=c("pm", "mm", "bg", "both", "all"),
+density_plot <- hist(raw_data, transfo=log2, which=c("pm", "mm", "bg", "both", "all"),
                     nsample=10000, target = "core", main = "Density Plot")
+## TODO: Add sample legend   
+#legend(15, 0.35, legend=c(raw_data[rownames]), lty=1:2, cex = 1)
 ```
 # transfo : used to scale the data
 # which : defines specific probe types
@@ -44,15 +46,15 @@ density_plot = hist(raw_data, transfo=log2, which=c("pm", "mm", "bg", "both", "a
 # target : specifies group of meta-probeset
 # main : main title 
 ```{r}
-pseudoimage = image(raw_data, transfo=log2)
+pseudoimage <- image(raw_data, transfo=log2)
 ```
 ```{r}
-MA_plot = MAplot(raw_data)
+MA_plot <- MAplot(raw_data)
 ```
 ### QA: Statistics
 ```{r}
-BiocManager::install("AnnotationDbi")
-BiocManager::install("Biobase")
+# BiocManager::install("AnnotationDbi")
+# BiocManager::install("Biobase")
 ```
 ### IQRray
 ```{r}
@@ -87,7 +89,21 @@ IQRray_score<-apply(rank_data,2,get_IQR,probeNames=probeNames)
 
 ### Normalize Data
 ```{r}
-print("Normalize Data step")
+#rma (Robust Multiarray Averaging)
+#plm (Probe Level Models)
+#normalized_data <- rma(raw_data, background=TRUE, normalize=TRUE, subset=NULL)
+norm_probe <- normalize(raw_data)
+norm_probe_table <- exprs(norm_probe)
+#row names : genes
+#column names : samples
+```
+```{r}
+norm_gene <- rma(raw_data)
+norm_gene_table <- exprs(norm_gene)
+#probe_level <- fitProbeLevelModel(raw_data, background=TRUE, normalize=TRUE, target="core", method="plm", verbose=TRUE, S4 = FALSE)
+```
+```{r}
+raw_table <- exprs(raw_data)
 ```
 ### Verify Normalization
 ```{r}
@@ -100,4 +116,6 @@ print("DGE Analysis step")
 ### Gene Annotations
 ```{r}
 print("Gene Annotations step")
+```
+```{r}
 ```
