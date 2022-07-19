@@ -12,7 +12,7 @@ params:
 # if (!require("BiocManager", quietly = TRUE))
 #     install.packages("BiocManager")
 
-# BiocManager::install("oligo")
+#  BiocManager::install("oligo")
 #package for reading CEL files, will add more packages for further steps
 ```
 ### Import Raw Data
@@ -38,7 +38,8 @@ print("Verify Data step")
 density_plot <- hist(raw_data, transfo=log2, which=c("pm", "mm", "bg", "both", "all"),
                     nsample=10000, target = "core", main = "Density Plot")
 ## TODO: Add sample legend   
-#legend(15, 0.35, legend=c(raw_data[rownames]), lty=1:2, cex = 1)
+#legend(15, 0.35, legend=c(colnames(raw_table)), lty=1:2, cex = 1)
+# legend() is not compatable
 ```
 # transfo : used to scale the data
 # which : defines specific probe types
@@ -87,23 +88,37 @@ IQRray_score<-apply(rank_data,2,get_IQR,probeNames=probeNames)
 
 ```
 
+
 ### Normalize Data
 ```{r}
-#rma (Robust Multiarray Averaging)
-#plm (Probe Level Models)
-#normalized_data <- rma(raw_data, background=TRUE, normalize=TRUE, subset=NULL)
-norm_probe <- normalize(raw_data)
-norm_probe_table <- exprs(norm_probe)
-#row names : genes
-#column names : samples
+just_norm <- normalize(raw_data)
+just_norm_table <- exprs(just_norm) #maybe probe level?
+# normalize will will return a matrix with same dimensions as the input matrix. 
+#   If applied to a FeatureSet object, the PM matrix will be used as input
+# could apply same methods of normalization as rma() to get probe level
 ```
 ```{r}
-norm_gene <- rma(raw_data)
-norm_gene_table <- exprs(norm_gene)
-#probe_level <- fitProbeLevelModel(raw_data, background=TRUE, normalize=TRUE, target="core", method="plm", verbose=TRUE, S4 = FALSE)
+justNorm <- preprocessCore::normalize.quantiles(raw_data, copy=TRUE,weights=NULL,
+                remove.extreme=c("variance","mean","both","none"),
+                n.remove=1,use.median=FALSE,use.log2=FALSE)
+```
+```{r}
+# RMA is most commonly used method for preprocessing normalization of Affymetrix microarray data. There
+# are three steps in the RMA algorithm: Convolution Background Correction, Quantile Normalization, and
+# Summarization using Median Polish.
+normRMA <- rma(raw_data)
+norm_gene_table <- exprs(normRMA)  #gene level
+#normalized_data <- rma(raw_data, background=TRUE, normalize=TRUE, subset=NULL)
 ```
 ```{r}
 raw_table <- exprs(raw_data)
+```
+```{r}
+MAplot_norm <- MAplot(just_norm)
+```
+
+```{r}
+densityPlot_norm <- hist(just_norm)
 ```
 ### Verify Normalization
 ```{r}
@@ -118,4 +133,5 @@ print("DGE Analysis step")
 print("Gene Annotations step")
 ```
 ```{r}
+quantileNormalization <- preprocessCore::normalize.quantiles(raw_table, keep.names=TRUE)
 ```
