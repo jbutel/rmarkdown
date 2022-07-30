@@ -13,6 +13,8 @@ params:
 #     install.packages("BiocManager")
 
 #  BiocManager::install("oligo")
+#  BiocManager::install("limma")
+#  BiocManager::install("biomaRt")
 #package for reading CEL files, will add more packages for further steps
 ```
 ### Import Raw Data
@@ -91,34 +93,127 @@ IQRray_score<-apply(rank_data,2,get_IQR,probeNames=probeNames)
 
 ### Normalize Data
 ```{r}
-just_norm <- normalize(raw_data)
-just_norm_table <- exprs(just_norm) #maybe probe level?
-# normalize will will return a matrix with same dimensions as the input matrix. 
-#   If applied to a FeatureSet object, the PM matrix will be used as input
-# could apply same methods of normalization as rma() to get probe level
+norm <- normalize(raw_data)
 ```
 ```{r}
-justNorm <- preprocessCore::normalize.quantiles(raw_data, copy=TRUE,weights=NULL,
-                remove.extreme=c("variance","mean","both","none"),
-                n.remove=1,use.median=FALSE,use.log2=FALSE)
+raw_table <- exprs(raw_data)
 ```
 ```{r}
 # RMA is most commonly used method for preprocessing normalization of Affymetrix microarray data. There
 # are three steps in the RMA algorithm: Convolution Background Correction, Quantile Normalization, and
 # Summarization using Median Polish.
 normRMA <- rma(raw_data)
-norm_gene_table <- exprs(normRMA)  #gene level
-#normalized_data <- rma(raw_data, background=TRUE, normalize=TRUE, subset=NULL)
+norm_probeset_table <- exprs(normRMA)  
+#Human Exon array probeset to gene-level expression (biostars.org, https://www.biostars.org/p/271379/)
+#Probe Level normalization
+backgroundCorrection <- preprocessCore::rma.background.correct(raw_table)
+probelevel_table <- preprocessCore::normalize.quantiles(backgroundCorrection, keep.names=TRUE)
+```
+## QA Visualization for Normalized Data
+```{r}
+MAplot_norm <- MAplot(normRMA)
 ```
 ```{r}
-raw_table <- exprs(raw_data)
+densityPlot_norm <- hist(normRMA)
+```
+## PCA plot
+```{r}
+pca <- prcomp(t(norm_probeset_table))
+plot(pca$x[,1:2])
+#how do you make a legend?
+#legend('topright', col=1:6, legend = paste("Samples", 1:6), pch=20, bty='n', cex=.75)
+```
+## DGE Analysis
+    ## Getting Factor Values
+```{r}
+fv <- data.frame(csv_file["Factor Value"])
+all_factor_values <- fv[,1]
+factor_values <- unique(all_factor_values)
+all.factor.values <- make.names(all_factor_values)
+factor.values <- make.names(factor_values)
+```
+    ## Creating Design
+```{r}
+ph = raw_data@phenoData
+ph@data[ ,2] = c(all.factor.values)
+colnames(ph@data)[2]="source"
+groups = ph@data$source
+f = factor(groups,levels = factor.values)
+design = model.matrix(~ 0 + f) 
+colnames(design) <- factor.values
 ```
 ```{r}
-MAplot_norm <- MAplot(just_norm)
+#Run for Data Sets with 2 Factor Values
+fit = limma::lmFit(norm_probeset_table,design)
+```
+```{r}
+#Run for Data Sets with 3 Factor Values
+fit = limma::lmFit(normRMA,design)
+```
+    ## Creating Constrast Matrix
+```{r}
+fit.groups <- colnames(fit$design) [which(fit$assign == 1)]
+fit.index <- which(levels(levels) %in% fit.groups)
+fit.group.names <- gsub(" ", "_", sub(",", "_", unique(csv_file$'Factor Value')))
+combos <- combn(fit.groups, 2)
+combos.names <- combn(fit.group.names, 2)
+contrasts <- c(paste(combos[1,], combos[2,], sep = "-", paste(combos[2,], combos[1,], sep="-")))
+contrast.names <- c(paste(combos.names[1,], combos.names[2,], sep = "v"), paste(combos.names[2,], 
+                    combos.names[1,], sep = "v"))
+cont.matrix <- limma::makeContrasts(contrasts = contrasts, levels=design)
+contrast.fit <- limma::contrasts.fit(fit, cont.matrix)
+contrast.fit.eb <- limma::eBayes(contrast.fit)
+log_fold_change <- contrast.fit.eb$coefficients[1:10,]
+p_value <- contrast.fit.eb$p.value[1:10,]
+adjusted_pvalue <- p.adjust(p_value,method="BH")
+```
+```{r}
+#results <- limma::decideTests(contrast.fit.eb, method = "separate", adjust.method = "BH", p.value = 0.05, lfc = 0.5)
+#summary(limma::decideTests(contrast.fit.eb[,-1]))
+#Error in h(simpleError(msg, call)) : 
+#  error in evaluating the argument 'object' in selecting a method for function 'summary': 
+#  subscript out of bounds
 ```
 
+## Gene Mapping
 ```{r}
-densityPlot_norm <- hist(just_norm)
+library(biomaRt)
+library(dplyr)
+```
+```{r}
+listEnsembl()
+ensembl <- useEnsembl(biomart = "genes")
+searchDatasets(mart = ensembl, pattern = "Mouse") 
+ensembl <- useDataset(dataset = "mmusculus_gene_ensembl", mart = ensembl)
+searchAttributes(mart = ensembl, pattern = "affy_")
+```
+```{r}
+my_affy_ids <- c(head(rownames(norm_probeset_table), 2000))
+results <- getBM(
+    attributes = c(
+        "affy_mogene_1_0_st_v1",
+        "ensembl_gene_id",
+        "uniprot_gn_symbol",
+        "go_id"
+        ),  # Columns we want, these were found using searchAttributes
+    filters = "affy_mogene_1_0_st_v1", #  Filters (one or more) that should be used in the query
+    values = my_affy_ids,  # Query IDs
+    mart = ensembl)
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
 ```
 ### Verify Normalization
 ```{r}
@@ -133,5 +228,64 @@ print("DGE Analysis step")
 print("Gene Annotations step")
 ```
 ```{r}
-quantileNormalization <- preprocessCore::normalize.quantiles(raw_table, keep.names=TRUE)
+```
+## Code I will not be using but do not want to delete
+```{r}
+# #trying to make a contrast matrix
+# comparisons <- c()
+# for (i in range(length(factor_values)))
+# {
+#     comparisons <- append(comparisons, fv[i]'-'fv[i+1])
+# }
+# #attempt 2
+# counter <- 2
+# for (fv in factor_values)
+# {
+#     comparisons <- append(comparisons, fv'-'fv[counter])
+#     counter <- counter + 1
+# }
+
+# #gene mapping with adf
+# adf <- read.delim(file=r"(C:\Users\linde\OneDrive\Desktop\GLDS-6_metadata_A-AFFY-43.adf.txt)", header=FALSE, skip=74)
+# probeset_names <- c(adf[1])
+# ensembl_id_with_emptys <- adf[12]
+# refseq <- c(adf[2])
+# ensembl_id <- lapply(ensembl_id_with_emptys, function(x) x[x!=""])
+# probeset_ensembl_refseq <- data.frame(probeset_names, ensembl_id_with_emptys, refseq)
+# ens <- c(probeset_ensembl_refseq[,2])
+# probeset <- c(probeset_ensembl_refseq[,1])
+# rs <- c(probeset_ensembl_refseq[,3])
+
+# prfromnorm <- rownames(norm_probeset_table)
+
+# #probeset_and_ensembl <- data.frame(probeset_names, ensembl_id)
+# c <- 1
+# probeset_refseq_dict <- c()
+# for (i in probeset)
+# {
+#     probeset_refseq_dict[rs[c]]<-i
+#     c <- c + 1
+# }
+
+# rsdupsbool <- duplicated(rs)
+# dupsindex<-c()
+# counter <- 1
+# for (bool in rsdups)
+# {
+#     if (bool=="TRUE")
+#     {
+#         dupsindex <- append(dupsindex, counter)
+#     }
+#     counter <- counter + 1
+# }
+# duprefseq <- c()
+# for (index in dupsindex)
+# {
+#     duprefseq <- append(duprefseq, rs[index])
+# }
+
+# #rsdups <- duplicated(rs)
+# uniquers <- unique(rs)
+# probeset_refseq_dict <- c()
+#     #probeset_with_uniquerefseq[uniquers[probeset_with_refseq[ps]]]<-ps
 ```

@@ -4,8 +4,7 @@
 - [Software used](#software-used)
 - [General processing overview with example commands](#general-processing-overview-with-example-commands)
   - [1. Import Raw Data](#1-import-raw-data)
-    - [2a. Read Raw Data](#2a-read-raw-data)
-  - [3. Build STAR Reference](#3-build-star-reference)
+  - [2. Build STAR Reference](#2-build-star-reference)
   - [4. Align Reads to Reference Genome then Sort and Index](#4-align-reads-to-reference-genome-then-sort-and-index)
     - [4a. Align Reads to Reference Genome with STAR](#4a-align-reads-to-reference-genome-with-star)
     - [4b. Compile Alignment Logs](#4b-compile-alignment-logs)
@@ -78,9 +77,6 @@
 
 ## 1. Import Raw Data
 
-<br>
-
-### 2a. Read Raw Data 
 
 ```bash
 csv_file <- read.table(file = "<runsheet.csv>", 
@@ -111,30 +107,21 @@ raw_data <- oligo::read.celfiles(array_data_files)
 
 ---
 
-## 3. Build STAR Reference  
+## 2. Build STAR Reference  
 
 ```bash
-STAR --runThreadN NumberOfThreads \
-  --runMode genomeGenerate \
-  --limitGenomeGenerateRAM 55000000000 \
-  --genomeSAindexNbases 14 \
-  --genomeDir /path/to/STAR/genome/directory \
-  --genomeFastaFiles /path/to/genome/fasta/file \
-  --sjdbGTFfile /path/to/annotation/gtf/file \
-  --sjdbOverhang ReadLength-1
+density_plot <- hist(raw_data, transfo=log2, which=c("pm", "mm", "bg", "both", "all"), nsample=10000, target = "core", main = "Density Plot")
 
 ```
 
 **Parameter Definitions:**
 
-- `--runThreadN` – number of threads available on server node to create STAR reference
-- `--runMode` - instructs STAR to run genome indices generation job
-- `--limitGenomeGenerateRAM` - maximum RAM available (in bytes) to generate STAR reference, at least 35GB are needed for mouse and the example above shows 55GB
-- `--genomeSAindexNbases` - length (in bases) of the SA pre-indexing string, usually between 10 and 15. Longer strings require more memory but allow for faster searches. This value should be scaled down for smaller genomes (like bacteria) to min(14, log2(GenomeLength)/2 - 1). For example, for a 1 megaBase genome this value would be 9.
-- `--genomeDir` - specifies the path to the directory where the STAR reference will be stored. At least 100GB of available disk space is required for mammalian genomes.
-- `--genomeFastaFiles` - specifies one or more fasta file(s) containing the genome reference sequences
-- `--sjdbGTFfile` – specifies the file(s) containing annotated transcripts in the standard gtf format
-- `--sjdbOverhang` - indicates the length of the genomic sequence around the annotated junction to be used in constructing the splice junctions database. The length should be one less than the maximum length of the reads.
+- `transfo` – used to scale the data
+- `which` - defines specific probe types
+- `nsample` - sample size used to produce plot
+- `target` - specifies group of meta-probeset
+- `main` - main title of plot
+
 
 **Input Data:**
 
