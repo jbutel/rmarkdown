@@ -7,224 +7,347 @@ params:
     test_value: 10
 ---
 
-### Import Packages
+### Import Packages and Set Up Environment
 ```{r}
 # if (!require("BiocManager", quietly = TRUE))
 #     install.packages("BiocManager")
 
+# Installing Packages: 
+
 #  BiocManager::install("oligo")
 #  BiocManager::install("limma")
 #  BiocManager::install("biomaRt")
-#package for reading CEL files, will add more packages for further steps
+#  BiocManager::install("AnnotationDbi")
+#  BiocManager::install("Biobase")
+
+# Importing Libraries
+
+#  library(oligo)
+#  library(limma)
+#  library(biomaRt)
+#  library(dplyr)
+#  library(tibble)
+#  library(AnnotationDbi)
+#  library(Biobase)
 ```
 ### Import Raw Data
 ```{r}
+    #Reading in runsheet with metadata
+
 csv_file <- read.table(file = r"(C:\Users\linde\rmarkdown\affy_processing\data_runsheets\GLDS_6_runsheet.csv)", 
                        sep=",",
                        header = TRUE,
                        check.names = FALSE
                        )
-array_data_files <- csv_file["Path to Raw Data File"] #column name of paths
 
-raw_data <- oligo::read.celfiles(array_data_files) #ExpressionFeatureSet Class
-```
+    #Accessing arrray data files located in column name 'Path to Raw Data File'
 
-### Verify Data
-```{r}
-print("Verify Data step")
+array_data_files <- csv_file["Path to Raw Data File"]
+
+    #Importing and read *.CEL files using oligo function 'read.celfiles()'
+
+raw_data <- oligo::read.celfiles(array_data_files) 
+
+#'raw_data' type - ExpressionFeatureSet Class
+
+#   Parameter Definitions:
+
+#file – path of runsheet file to be accessed
+#sep - setting delimiter, default is white space
+#header - determines if first row in dataframe is column names
+#check.names - if TRUE, variable names are checked and corrected for synaticially validity
 ```
 
 ### Quality Analysis 
 ### QA: Visualization
 ```{r}
+#Assess quality of raw data through visualization of plots
+
+# First plot: density plot
+# hist() function plots the density estimates for each sample
+# Purpose: Determine technical variation between samples
+
 density_plot <- hist(raw_data, transfo=log2, which=c("pm", "mm", "bg", "both", "all"),
-                    nsample=10000, target = "core", main = "Density Plot")
+                    nsample=10000, target = "core", main = "Density of raw intensities for multiple arrays")
+
 ## TODO: Add sample legend   
-#legend(15, 0.35, legend=c(colnames(raw_table)), lty=1:2, cex = 1)
-# legend() is not compatable
 ```
 ```{r}
-# transfo : used to scale the data
-# which : defines specific probe types
-# nsample : sample size used to produce plot
-# target : specifies group of meta-probeset
-# main : main title 
-```
-```{r}
+# Second Plot: Pseudoimage
+# image() function produces a pseudoimage for each array
+# Purpose: Identify spatial abnormalities
+
 pseudoimage <- image(raw_data, transfo=log2)
 ```
 ```{r}
-MA_plot <- MAplot(raw_data)
+# Third Plot: MA plot
+# MAplot() function creates MA plots using a reference array
+# Purpose: Comparison of intensity values from one sample to another
+
+MA_plot <- MAplot(raw_data, ylim=c(-2, 4))
+```
+```{r}
+#   Parameter Definitions:
+
+# transfo - used to scale the data
+# which - defines specific probe types
+# nsample - sample size used to produce plot
+# target - specifies group of meta-probeset
+# main - main title 
+# ylim - scale for y axis
 ```
 ### QA: Statistics
-```{r}
-# BiocManager::install("AnnotationDbi")
-# BiocManager::install("Biobase")
-```
+
 ### IQRray
 ```{r}
 # The IQRray statistic is obtained by ranking all the probe intensities from
 # a given array and by computing the average rank for each probe set. The
 # interquartile range (IQR) of the probe sets average ranks serves then as
 # quality score. 
-#Example of a low score: 122783.6
-#   high score: 226124.6
-library(methods)
-library(AnnotationDbi)
-library(Biobase)
-
-	#data - Affybatch object obtained after reading in celfiles into R with function ReadAffy from package affy
+	#data - ExpressionFeatureSet object obtained after reading in celfiles into R 
 	
 	#obtaining intensity values for perfect match (pm) probes
+
 pm_data<-pm(raw_data)
 	
 	#ranking probe intensities for every array 
+
 rank_data<-apply(pm_data,2,rank)
 	
 	#obtaining names of probeset for every probe
+
 probeNames<-probeNames(raw_data)
 	
 	#function computing IQR of mean probe ranks in probesets 
+
 get_IQR<-function(rank_data,probeNames){round(IQR(sapply(split(rank_data,probeNames),mean)),digits=2)}
 	
 	#computing arIQR score
+
 IQRray_score<-apply(rank_data,2,get_IQR,probeNames=probeNames)	
-
 ```
-
 
 ### Normalize Data
 ```{r}
-raw_table <- exprs(raw_data)
-```
-```{r}
-# RMA is most commonly used method for preprocessing normalization of Affymetrix microarray data. There
-# are three steps in the RMA algorithm: Convolution Background Correction, Quantile Normalization, and
-# Summarization using Median Polish.
-normRMA <- rma(raw_data)
-norm_probeset_table <- exprs(normRMA)  
-norm_probeset_table <- as.data.frame(norm_probeset_table)
-#Human Exon array probeset to gene-level expression (biostars.org, https://www.biostars.org/p/271379/)
 #Probe Level normalization
+
+    #Converting raw data from ExpressionFeatureSet object to matrix 
+
+raw_table <- exprs(raw_data)
+
+    #Performing background correction
+
 backgroundCorrection <- preprocessCore::rma.background.correct(raw_table)
+
+    #Performing Normalization using Quantile Normalization
+
 probelevel_table <- preprocessCore::normalize.quantiles(backgroundCorrection, keep.names=TRUE)
+
+    #Writing probe level normalization to file
+
+#write.csv(probelevel_table, r"(C:\Users\linde\rmarkdown\notebook\probelevel_table.csv)")
 ```
-## QA Visualization for Normalized Data
 ```{r}
-MAplot_norm <- MAplot(normRMA)
+#Probeset Level Normalization
+
+    #RMA (Robust Multi-array Average) is most commonly used method for preprocessing normalization of 
+    #Affymetrix microarray data. There are three steps in the RMA algorithm: Convolution Background 
+    #Correction, Quantile Normalization, and Summarization using Median Polish.
+
+    #Performing RMA
+
+normRMA <- rma(raw_data)
+
+    #Converting normalized data to a matrix for easier accessibility 
+
+norm_probeset_table <- exprs(normRMA)  
+
+    #Writing probeset level normalization to file
+
+#write.csv(norm_probeset_table, r"(C:\Users\linde\rmarkdown\notebook\norm_probeset_table.csv)")
+```
+
+## Quality Analysis Visualization for Normalized Data
+```{r}
+#QA to ensure normalization worked properly
+#Samples should appear more similar to each other after normalization
+#Same types of plots as QA of raw data for easy comparison
+
+MAplot_norm <- MAplot(normRMA, ylim=c(-2, 4))
 ```
 ```{r}
-densityPlot_norm <- hist(normRMA)
+densityPlot_norm <- hist(normRMA, main = "Density of raw intensities for multiple arrays")
 ```
-## PCA plot
-```{r}
-pca <- prcomp(t(norm_probeset_table))
-plot(pca$x[,1:2])
-## TODO: make sample legend
-#legend('topright', col=1:6, legend = paste("Samples", 1:6), pch=20, bty='n', cex=.75)
-```
-## DGE Analysis
+
+## Differential Expression (DE) Analysis
     ## Getting Factor Values
 ```{r}
+    #Creating a list of Factor Values
+
 fv <- data.frame(csv_file["Factor Value"])
+
 all_factor_values <- fv[,1]
+
+    #Obtaining the name of each factor value
+
 factor_values <- unique(all_factor_values)
+
+    #Making the names for both lists syntactically valid
+
 all.factor.values <- make.names(all_factor_values)
+
 factor.values <- make.names(factor_values)
 ```
-    ## Creating Design
+    ## Creating Design Matrix
 ```{r}
+    #Adding factor values to phenoData
+
 ph = raw_data@phenoData
+
 ph@data[ ,2] = c(all.factor.values)
+
 colnames(ph@data)[2]="source"
+
+    #Grouping factor values
+
 groups = ph@data$source
+
+    #Transforming group names into statistical factors
+
 f = factor(groups,levels = factor.values)
+
+    #Creating matrix of values of the grouping variable
+
 design = model.matrix(~ 0 + f) 
+
 colnames(design) <- factor.values
 ```
-    ## Creating Constrast Matrix
+    ## Forming Constrast Matrix
 ```{r}
+    #Fit design matrix to a linear model using lmFit()
+
 fit = limma::lmFit(norm_probeset_table,design)
+
 fit.groups <- colnames(fit$design) [which(fit$assign == 1)]
+
 fit.index <- which(levels(levels) %in% fit.groups)
+
+    #Creating comparisons for contrast matrix
+
 fit.group.names <- gsub(" ", "_", sub(",", "_", unique(csv_file$'Factor Value')))
+
 combos <- combn(fit.groups, 2)
+
 combos.names <- combn(fit.group.names, 2)
+
 contrasts <- c(paste(combos[1,], combos[2,], sep = "-", paste(combos[2,], combos[1,], sep="-")))
+
 contrast.names <- c(paste(combos.names[1,], combos.names[2,], sep = "v"), paste(combos.names[2,], 
                     combos.names[1,], sep = "v"))
+
+    #Creating Contrast Matrix
+
 cont.matrix <- limma::makeContrasts(contrasts = contrasts, levels=design)
+
 contrast.fit <- limma::contrasts.fit(fit, cont.matrix)
-```
-    ## Testing and Accessing Results
-```{r}
+
+    #Performing statistical t-test using eBayes()
+
 contrast.fit.eb <- limma::eBayes(contrast.fit)
+```
+    ## Accessing Results for dataset with two factor values
+```{r}
+    #Extracting log fold change values
+
 log_fold_change <- contrast.fit.eb$coefficients
-log.fold.change <- c(log_fold_change)  #so name is better in final dataframe
+
+    #Extracting p-values
+
 p_value <- contrast.fit.eb$p.value
+
+    #Changing names
+
+log.fold.change <- c(log_fold_change) 
+
 p.value <- c(p_value)
+
+    #Adjusting the p-values using the Benjamini-Hochberg methods
+
 adjusted_pvalue <- p.adjust(p_value,method="BH")
+
+    #Combining normalized expressions table with test results
+
+de_dataframe <- cbind(norm_probeset_table, log.fold.change, p.value, adjusted_pvalue)
+
 ##TODO debug decideTests and summary functions
-
-#results given at probeset level
-#difficult to put into dataframe for more than one 
-#dge_dataframe <- cbind(norm_probeset_table, log.fold.change, p.value, adjusted_pvalue)
 ```
+    #Accessing Results for dataset with three factor values
 ```{r}
-# for glds 6
-# TODO: figure out how to separate factor values not manually
-non_irradiated <- norm_probeset_table[,c(1,2,3)]
-ion_beam_radiation <- norm_probeset_table[,c(4,5,6)]
-avg_fv_weird_names_6 <- data.frame(rowMeans(non_irradiated), rowMeans(ion_beam_radiation))
-#avg_fv_6 <- rename(avg_fv_weird_names_6, "Mean Non Irradiated" = "rowMeans.non_irradiated.", "Mean 56Fe Ion Beam Radiation" = "rowMeans.ion_beam_radiation.")
-dge_dataframe <- cbind(norm_probeset_table, log.fold.change, p.value, adjusted_pvalue, avg_fv_weird_names_6)
-#write.csv(dge_dataframe, r"(C:\Users\linde\rmarkdown\notebook\glds_6_DGE.csv)")
-#   only run once
+##  GLDS-25 (difficult to automate with more than 2 factor values)
 
-## TODO: make dataframe for glds 25 and glds 189
+# Different from GLDS-6 because has 3 factor values and three sets of p-values
+
+    #Making a dataframe of log fold change and p-values for easier accessibility
+
+log_fold_change_df <- data.frame(log_fold_change)
+p_value_df <- data.frame(p_value)
+lfcdf <- rename(log_fold_change_df, "Log Fold Change GC-SF"="Ground.Control..Space.Flight..Space.Flight..Ground.Control.",
+    "Log Fold Change GC-VC" = "Ground.Control..Vivarium.Control..Vivarium.Control..Ground.Control.",
+    "Log Fold Change SF-VC" = "Space.Flight..Vivarium.Control..Vivarium.Control..Space.Flight.")
+ 
+pvdf <- rename(p_value_df, "P-value GC-SF"="Ground.Control..Space.Flight..Space.Flight..Ground.Control.",
+    "P-value GC-VC" = "Ground.Control..Vivarium.Control..Vivarium.Control..Ground.Control.",
+    "P-value SF-VC" = "Space.Flight..Vivarium.Control..Vivarium.Control..Space.Flight.")
+
+    #Extracting each set of p-values 
+
+pvalue_gcsf <- c(p_value_df[,1])
+pvalue_gcvc <- c(p_value_df[,2])
+pvalue_sfvc <- c(p_value_df[,3])
+
+    #Adjusting each set of p-values
+
+adjusted_pvalue_gcsf <- p.adjust(p_value_df[,1],method="BH")
+adjusted_pvalue_gcvc <- p.adjust(p_value_df[,2],method="BH")
+adjusted_pvalue_sfvc <- p.adjust(p_value_df[,3],method="BH")
+
+    #Adding to the dataframe
+
+de_dataframe <- cbind(norm_probeset_table, lfcdf, pvdf, adjusted_pvalue_gcsf,
+                 adjusted_pvalue_gcvc, adjusted_pvalue_sfvc)
+
+
+## TODO: make dataframe for glds 189
 ```
 
-## Gene Mapping
-```{r}
-library(biomaRt)
-library(dplyr)
-library(tibble)
-```
-    ## GLDS 25
-```{r}
-listEnsembl()
-ensembl <- useEnsembl(biomart = "genes")
-searchDatasets(mart = ensembl, pattern = "Mouse") 
-ensembl <- useDataset(dataset = "mmusculus_gene_ensembl", mart = ensembl)
-searchAttributes(mart = ensembl, pattern = "affy_")
-```
+## Gene Annotations
 
-```{r}
-my_affy_ids <- c(head(rownames(norm_probeset_table), 2000))
-gene_annotations <- getBM(
-    attributes = c(
-        "affy_mogene_1_0_st_v1",
-        "ensembl_gene_id",
-        "uniprot_gn_symbol",
-        "go_id"
-        ),  # Columns we want, these were found using searchAttributes
-    filters = "affy_mogene_1_0_st_v1", #  Filters (one or more) that should be used in the query
-    values = my_affy_ids,  # Query IDs
-    mart = ensembl)
-```
     ## GLDS 6
 ```{r}
+    #Searching Ensembl 
+    
 listEnsembl()
+
+    #Selecting mart object pointing to the database
+
 ensembl <- useEnsembl(biomart = "genes")
+
+    #Searching datasets in this database
+
 searchDatasets(mart = ensembl, pattern = "Rat") 
+
+    #Selecting dataset
+
 ensembl <- useDataset(dataset = "rnorvegicus_gene_ensembl", mart = ensembl)
+
+    #Finding the microarray probe ID attribute
+    
 searchAttributes(mart = ensembl, pattern = "affy_")
 ```
 ```{r}
-#my_affy_ids <- c(head(rownames(norm_probeset_table), 5000))
-#   example to test 
+    #Generate mapped dataframe using getBM()
+
 my_affy_ids <- rownames(norm_probeset_table)
-#   all probeset names but currently takes too long, ~15 minutes to run
 gene_annotations <- getBM(
     attributes = c(
         "affy_rat230_2",
@@ -235,207 +358,52 @@ gene_annotations <- getBM(
     filters = "affy_rat230_2", 
     values = my_affy_ids,  
     mart = ensembl)
+
+#   Parameter Definitions:
+#attributes - desired attributes extracted from specified database
+#filters - filters to be used in the query
+#values - query IDs
+#mart - object connected to desird database and dataset
 ```
 ```{r}
+    #Converting multimappings from multiple rows into list fields
+
 gene_annotations <- gene_annotations %>% 
-         group_by(affy_rat230_2) %>% # group by ensembl_gene_id
-         # then for each group
+
+        #grouping by probe ID
+
+         group_by(affy_rat230_2) %>% 
+
          summarise( 
-            # Convert uniprot_gn_symbol to a string of unique values in the group (i.e. all symbols mapped to the same ensembl ID) and rename as "SYMBOL"
+
+            #Convert uniprot_gn_symbol to a string of unique values in the group
+
             SYMBOL = toString(unique(uniprot_gn_symbol)), 
-            # Convert probe IDs to a string of unique IDs in the group (i.e. all probe IDs mapped to the same ensembl ID)
+
+            #Convert Ensembl IDs to a string of unique IDs in the group
+
             ENSEMBL = toString(unique(ensembl_gene_id)), 
-            # Convert go_ids to a string of unique IDs in the group (i.e. all go_ids mapped to the same ensembl ID) and rename as "GO_Ids"
+
+            #Convert go_ids to a string of unique IDs in the group
+
             GO_Ids = toString(unique(go_id))
             ) 
 ```
+
+## Creating Final Table
 ```{r}
-final_dataframe <- rownames_to_column(dge_dataframe, var="probesets") %>% left_join(gene_annotations,by = c("probesets" = "affy_rat230_2"))
+#glds6
+
+    #Joining tables to map to items in DE dataframe using left.join()
+
+        #Creating a column with probe IDS in DE dataframe
+
+final_dataframe <- rownames_to_column(de_dataframe, var="probesets") %>% left_join(gene_annotations, by = c("probesets" = "affy_rat230_2"))
+
+    #Joining using probe IDS as common factor
 ```
+    ## Writing Final table to file
 ```{r}
 #write.csv(final_dataframe, r"(C:\Users\linde\rmarkdown\notebook\GLDS_6_DGE.csv)")
-```
-## Code I will not be using but do not want to delete
-```{r}
-#results <- limma::decideTests(contrast.fit.eb, method = "separate", adjust.method = "BH", p.value = 0.05, lfc = 0.5)
-#summary(limma::decideTests(contrast.fit.eb[,-1]))
-#Error in h(simpleError(msg, call)) : 
-#  error in evaluating the argument 'object' in selecting a method for function 'summary': 
-#  subscript out of bounds
-
-# for glds 25, having difficulty
-#avg_fv_weird_names_25 <- data.frame(rowMeans(norm_probeset_table[,c(1,2,3,4,5)]), rowMeans(norm_probeset_table[,c(6,7,8,9,10,11)]), 
-#                         rowMeans(norm_probeset_table[,c(12,13,14,15,16,17)]))
-#avg_fv_25 <- rename(avg_fv_weird_names_25, )
-#dge_dataframe <- cbind(norm_probeset_table, log_fold_change, p_value, adjusted_pvalue)
-#write.csv(dge_dataframe, r"(C:\Users\linde\rmarkdown\notebook\glds_25_DGE.csv)")
-# didn't work, everything currently written to dge 25 csv is all glds 6 stuff
-#testresults_25 <- data.frame(log_fold_change, p_value, adjusted_pvalue)
-
-# log_fold_change_df <- data.frame(log_fold_change)
-# p_value_df <- data.frame(p_value)
-# pvalue_gcsf <- c(p_value_df[,1])
-# pvalue_gcvc <- c(p_value_df[,2])
-# pvalue_sfvc <- c(p_value_df[,3])
-# adjusted_pvalue_gcsf <- p.adjust(p_value_df[,1],method="BH")
-# adjusted_pvalue_gcvc <- p.adjust(p_value_df[,2],method="BH")
-# adjusted_pvalue_sfvc <- p.adjust(p_value_df[,3],method="BH")
-# dge_dataframe <- cbind(norm_probeset_table, log_fold_change_df, p_value_df, adjusted_pvalue_gcsf, 
-#                  adjusted_pvalue_gcvc, adjusted_pvalue_sfvc)
-
-# #trying to make a contrast matrix
-# comparisons <- c()
-# for (i in range(length(factor_values)))
-# {
-#     comparisons <- append(comparisons, fv[i]'-'fv[i+1])
-# }
-# #attempt 2
-# counter <- 2
-# for (fv in factor_values)
-# {
-#     comparisons <- append(comparisons, fv'-'fv[counter])
-#     counter <- counter + 1
-# }
-
-# #gene mapping with adf
-# adf <- read.delim(file=r"(C:\Users\linde\OneDrive\Desktop\GLDS-6_metadata_A-AFFY-43.adf.txt)", header=FALSE, skip=74)
-# probeset_names <- c(adf[1])
-# ensembl_id_with_emptys <- adf[12]
-# refseq <- c(adf[2])
-# ensembl_id <- lapply(ensembl_id_with_emptys, function(x) x[x!=""])
-# probeset_ensembl_refseq <- data.frame(probeset_names, ensembl_id_with_emptys, refseq)
-# ens <- c(probeset_ensembl_refseq[,2])
-# probeset <- c(probeset_ensembl_refseq[,1])
-# rs <- c(probeset_ensembl_refseq[,3])
-
-# prfromnorm <- rownames(norm_probeset_table)
-
-# #probeset_and_ensembl <- data.frame(probeset_names, ensembl_id)
-# c <- 1
-# probeset_refseq_dict <- c()
-# for (i in probeset)
-# {
-#     probeset_refseq_dict[rs[c]]<-i
-#     c <- c + 1
-# }
-
-# rsdupsbool <- duplicated(rs)
-# dupsindex<-c()
-# counter <- 1
-# for (bool in rsdups)
-# {
-#     if (bool=="TRUE")
-#     {
-#         dupsindex <- append(dupsindex, counter)
-#     }
-#     counter <- counter + 1
-# }
-# duprefseq <- c()
-# for (index in dupsindex)
-# {
-#     duprefseq <- append(duprefseq, rs[index])
-# }
-
-# #rsdups <- duplicated(rs)
-# uniquers <- unique(rs)
-# probeset_refseq_dict <- c()
-#     #probeset_with_uniquerefseq[uniquers[probeset_with_refseq[ps]]]<-ps
-
-#  norm <- normalize(raw_data)
-
-# all_uniprot <- gene_annotations$uniprot_gn_symbol  
-# go_ids <- gene_annotations$go_id
-# all_probesets <- gene_annotations$affy_rat230_2
-# all_ensembl_ids <- gene_annotations$ensembl_gene_id  #len: 114871
-# ensembl_ids <- unique(all_ensembl_ids)  #len: 4700
-# probesets <- unique(all_probesets)  #len: 4624
-# uniprot <- unique(all_uniprot)  #len: 3281
-
-# #trying to get gene annotations, but cant use all probesets/ensembl ids because too large
-# dgedf_exampleset <- dge_dataframe[udf$all_probesets, ]
-# dgedf_exampleset_with_ensembl <- cbind(dgedf_exampleset, udf$all_ensembl_ids)
-
-# #ensembl_to_probeset <- data.frame(all_probesets, row.names = all_ensembl_ids)
-# dic <- c()
-# counter <- 1
-# for (i in ensembl_ids)
-# {
-#     dic[i] <- all_probesets[counter]
-#     counter <- counter + 1
-# }
-
-# #does not work
-# #   d <- unique(dic)
-# #   e <- c(d)
-# df <- data.frame(all_ensembl_ids, all_probesets)
-# udf <- unique(df)  #len: 5079
-# ens <- udf$all_ensembl_ids
-
-# gene_annotations_PandE <- getBM(
-#     attributes = c(
-#         "affy_rat230_2",
-#         "ensembl_gene_id"
-#         ), 
-#     filters = "affy_rat230_2", 
-#     values = my_affy_ids,  
-#     mart = ensembl)
-# #len: 5079
-
-# "
-#   affy_rat230_2    ensembl_gene_id uniprot_gn_symbol      go_id
-# 1  1370109_s_at ENSRNOG00000029996                   GO:0005525
-# 2  1370109_s_at ENSRNOG00000029996                   GO:0003924
-# 3  1370109_s_at ENSRNOG00000029996                   GO:0003746
-# 4  1370109_s_at ENSRNOG00000029996                   GO:0006414
-# 5  1370109_s_at ENSRNOG00000029996                   GO:0000166
-# 6  1370109_s_at ENSRNOG00000029996                   GO:0006412
-
-# unique df
-#       all_ensembl_ids all_probesets
-# 1  ENSRNOG00000029996  1370109_s_at
-# 7  ENSRNOG00000016356    1368272_at
-# 27 ENSRNOG00000009377    1372399_at
-# 41 ENSRNOG00000027204    1368345_at
-# 50 ENSRNOG00000027204  1371087_a_at
-# 59 ENSRNOG00000021051    1367727_at
-
-# gene annotations without go id or uniprot
-#   affy_rat230_2    ensembl_gene_id
-# 1  1370109_s_at ENSRNOG00000029996
-# 2    1368272_at ENSRNOG00000016356
-# 3    1372399_at ENSRNOG00000009377
-# 4    1368345_at ENSRNOG00000027204
-# 5  1371087_a_at ENSRNOG00000027204
-# 6    1367727_at ENSRNOG00000021051
-
-# udf and new gene annotations are basically same thing
-# "
-# #make a data frame where rownames are the probeset names 
-# #make one for each sample for expressions
-# # have to make intermediate data frame with probeset matching to ensembl to get expression values 
-# #   matched with ensembl
-# #data frame with: 
-# #   probeset names
-# #   ensembl ids
-# #   expression values
-# #expressions are in normRMA/norm_probeset_table
-
-# #to find all probesets that go with one ensembl id:
-# #   make list of ensembl ids from gene annotations
-# #   find unique
-# #   make df where ensembl ids are rownames
-
-#is there a function to split alike objects in a list?
-#   how I would do it in python:
-
-# lofl = []
-# for i in range(len(factor_values)):
-#   nl = []
-#   for f in all_factor_values:
-#     if f == factor_values[i]:
-#       nl.append(f)
-#   lofl.append(nl)
-#   nl = []
-# firstfv = lofl[0]
-# secondfv = lofl[1]
+#write.csv(final_dataframe, r"(C:\Users\linde\rmarkdown\notebook\GLDS_25_DGE.csv)")
 ```
